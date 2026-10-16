@@ -1,17 +1,42 @@
-QR-code
+# QR Attendance PWA
 
-This repository was empty and has been prepared as a small static QR code generator site and configured for deployment to Vercel.
+This repository has been updated to a Next.js Progressive Web App (PWA) that implements a basic QR-based attendance flow.
 
-What I added
-- index.html — a simple, client-side QR code generator using qrcodejs (CDN)
-- vercel.json — Vercel configuration to serve the static index.html
+Quick overview of features added
+- PWA ready (manifest + next-pwa)
+- Teacher authentication with Firebase Auth (email/password)
+- Teachers can create "sessions" which generate a random token and a QR code link
+- Students scanning the QR open the /attend page where they submit name, grade, section
+- Submissions are stored in Firestore under sessions/{sessionId}/attendees
+- Teacher dashboard shows sessions and attendee lists
+
+Setup (Firebase and Vercel)
+1. Create a Firebase project at https://console.firebase.google.com/
+2. Enable Email/Password sign-in in Authentication
+3. Create a Firestore database (in production mode or test mode as you prefer)
+4. Copy Firebase config values and set them in Vercel Environment Variables (or a local .env.local):
+
+NEXT_PUBLIC_FIREBASE_API_KEY
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+NEXT_PUBLIC_FIREBASE_PROJECT_ID
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+NEXT_PUBLIC_FIREBASE_APP_ID
+
+Locally, create a `.env.local` with those variables and run:
+
+npm install
+npm run dev
 
 Deploying to Vercel
-1. Import repository on https://vercel.com/new and follow the UI (no build step required).
-2. Or use the Vercel CLI:
-   - Install: `npm i -g vercel`
-   - From your cloned repo folder run: `vercel` and follow the prompts.
+- Import the repo into Vercel and add the same environment variables under Project Settings > Environment Variables.
+- Build & Deploy. Vercel will run `next build` and serve the app.
 
-Next steps / options
-- If you want a React/Next.js app (with server-side features, API routes, or nicer UX), tell me and I can scaffold a Next.js starter and update vercel.json accordingly.
-- Add a LICENSE, CI, or custom domain in Vercel if needed.
+Notes & Next steps
+- This is a minimal MVP. For production, consider:
+  - Security rules for Firestore to prevent tampering (restrict session writes to session owner, etc.)
+  - Expiration for sessions (auto-disable old sessions)
+  - Rate-limiting / duplicate submissions checks
+  - Email verification for teachers
+  - Better UX and design, custom icons
+
